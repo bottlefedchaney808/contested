@@ -1,0 +1,33 @@
+[sources.reddit]
+enabled = true
+# subs = ["wallstreetbets", "stocks", "investing", "Options"]
+
+[sources.x_grok]
+enabled = true
+# base_url = "https://api.x.ai"   # else uses $GROK_BASE_URL
+
+[sources.stocktwits]
+enabled = true
+
+[sources.fourchan]
+enabled = true
+board = "biz"
+
+[sources.facebook]
+enabled = false
+
+[sources.instagram]
+enabled = false
+
+[scores]
+window = "7d"
+half_life_hours = 48.0
+l_low = 1.0
+l_high = 7.0
+contested_floor = 1.0
+
+[watchlist]
+path = "data/watchlist.txt"
+
+[db]
+path = "data/contested.db"

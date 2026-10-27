@@ -6,6 +6,7 @@ from ..config import Config, ConfigError
 from .base import Source, SourceError
 from .facebook import FacebookSource
 from .fourchan import FourChanSource
+from .grok_auth import resolve_grok
 from .instagram import InstagramSource
 from .reddit import RedditSource
 from .stocktwits import StocktwitsSource
@@ -27,12 +28,7 @@ def build_sources(cfg: Config) -> dict:
                 subs=tuple(scfg.subs),
             )
         elif name == "x_grok":
-            base_url = scfg.base_url or env.get("GROK_BASE_URL", "")
-            api_key = env.get("GROK_API_KEY", "")
-            if not base_url or not api_key:
-                raise ConfigError(
-                    "x_grok is enabled but GROK_BASE_URL and GROK_API_KEY env vars are required"
-                )
+            base_url, api_key = resolve_grok(scfg.base_url or "", env)
             out[name] = XGrokSource(base_url=base_url, api_key=api_key)
         elif name == "stocktwits":
             out[name] = StocktwitsSource()

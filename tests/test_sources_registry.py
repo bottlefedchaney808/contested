@@ -24,9 +24,10 @@ def test_build_includes_only_enabled(monkeypatch):
     assert set(built) == {"reddit", "x_grok", "stocktwits", "fourchan"}
 
 
-def test_x_grok_requires_env(monkeypatch):
+def test_x_grok_requires_env(monkeypatch, tmp_path):
     monkeypatch.delenv("GROK_BASE_URL", raising=False)
     monkeypatch.delenv("GROK_API_KEY", raising=False)
+    monkeypatch.setenv("DSH_GROK_AUTH_FILE", str(tmp_path / "missing-auth.json"))
     with pytest.raises(ConfigError):
         build_sources(_cfg())
 

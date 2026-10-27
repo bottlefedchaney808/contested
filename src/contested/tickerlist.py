@@ -28,7 +28,7 @@ def load_ticker_set(path: str | Path) -> frozenset:
 def _parse_first_column(text: str) -> set:
     out = set()
     for line in text.splitlines():
-        first = line.split("\t", 1)[0].strip().upper()
+        first = re.split(r"[|\t]", line, maxsplit=1)[0].strip().upper()
         if first and first != "SYMBOL" and _TOK.match(first):
             out.add(first)
     return out

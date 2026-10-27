@@ -9,9 +9,9 @@ def test_load_ticker_set(tmp_path):
     assert load_ticker_set(p) == frozenset({"GME", "AMC", "MMM"})
 
 
-def test_download_parses_nasdaq(tmp_path):
-    listed = "Symbol\tCompany Name\nGME\tGameStop\nMMM\t3M\n"
-    other = "Symbol\tCompany Name\nAAPL\tApple\n"
+def test_download_parses_pipe_delimited_nasdaq(tmp_path):
+    listed = "Symbol|Security Name|ETF\nGME|GameStop|N\nMMM|3M|N\n"
+    other = "ACT Symbol|Security Name|Exchange\nAAPL|Apple|Q\n"
     def handler(request: httpx.Request) -> httpx.Response:
         if "nasdaqlisted" in request.url.path:
             return httpx.Response(200, text=listed)

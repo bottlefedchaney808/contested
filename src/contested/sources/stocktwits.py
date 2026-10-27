@@ -59,9 +59,15 @@ class StocktwitsSource:
                     if p and self._in_window(p, window):
                         posts.append(p)
         else:
-            url = "https://api.stocktwits.com/api/2/streams/message.json?limit=200"
-            for m in self._messages(url):
-                p = self._to_post(m)
-                if p and self._in_window(p, window):
-                    posts.append(p)
+            # The global message stream now 404s. Trending symbols still works;
+            # pull each symbol's stream, which is the same shape as per-ticker mode.
+            data = http_get_json(
+                "https://api.stocktwits.com/api/2/trending/symbols.json", self._client)
+            symbols = [s.get("symbol") for s in data.get("symbols", []) if s.get("symbol")]
+            for t in symbols:
+                url = f"https://api.stocktwits.com/api/2/streams/symbol/{t}.json?limit=200"
+                for m in self._messages(url):
+                    p = self._to_post(m)
+                    if p and self._in_window(p, window):
+                        posts.append(p)
         return posts

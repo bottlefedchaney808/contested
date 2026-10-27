@@ -19,7 +19,10 @@ def _msg(mid, body, created, user, like, replies, retweets, symbols):
 
 def test_market_mode():
     def handler(r):
-        assert "/streams/message.json" in str(r.url)
+        url = str(r.url)
+        if "/trending/symbols.json" in url:
+            return httpx.Response(200, json={"symbols": [{"symbol": "GME"}]})
+        assert "/streams/symbol/GME.json" in url
         return httpx.Response(200, json={"messages": [
             _msg("1", "long $GME", TS, "u1", 10, 2, 1, [{"symbol": "GME"}]),
             _msg("2", "old", "2020-01-01T00:00:00Z", "u2", 1, 0, 0, [{"symbol": "AMC"}]),

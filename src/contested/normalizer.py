@@ -8,7 +8,10 @@ from .scorer import engagement_weight
 from .sentiment import classify, text_intensity
 
 _CASE_RE = re.compile(r"\$([A-Za-z]{1,5})\b")
-_WORD_RE = re.compile(r"\b[A-Za-z]{3,5}\b")
+# Bare mentions must already be uppercase. A 12k ticker universe contains
+# ordinary words (ALL, CAN, FOR, ARE); matching any 3-5 letter word tags
+# every sentence with fake tickers.
+_WORD_RE = re.compile(r"\b[A-Z]{3,5}\b")
 
 
 def extract_tickers(text: str, ticker_set: frozenset) -> tuple:

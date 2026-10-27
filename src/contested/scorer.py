@@ -13,7 +13,9 @@ REPETITION_THRESHOLD = 3
 
 
 def engagement_weight(upvotes: int, comments: int, reposts: int) -> float:
-    return math.log10(1.0 + upvotes + 4.0 * comments + 2.0 * reposts)
+    # Floor at 1: some sources (Stocktwits) no longer return like counts, and a
+    # real post with no counts must still outweigh silence.
+    return max(1.0, math.log10(1.0 + upvotes + 4.0 * comments + 2.0 * reposts))
 
 
 def decay_weight(age_hours: float, half_life_hours: float) -> float:

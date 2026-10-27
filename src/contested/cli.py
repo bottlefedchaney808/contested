@@ -97,7 +97,15 @@ def scan(
     events = store.events_in_window(now, wh)
     mode = "market" if market else "watch"
     if mode == "watch":
-        tickers = [t for t in watch if t in ticker_set] or list(ticker_set)
+        tickers = [t for t in watch if t in ticker_set]
+        if not tickers and not watch:
+            # No watchlist file: score whatever was actually collected, not the
+            # full 12k ticker universe (that prints thousands of zeros).
+            tickers = store.tickers_in_window(now, wh)
+        if not tickers:
+            typer.echo("no watchlist. Create data/watchlist.txt, or run: contested scan --market --fetch")
+            store.close()
+            raise typer.Exit(code=2)
     else:
         tickers = store.tickers_in_window(now, wh)
     scores = score_all(

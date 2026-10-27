@@ -28,6 +28,10 @@ def test_bare_short_word_ignored():
     assert extract_tickers("AMC MMM GOOGL", SET) == ("AMC", "MMM", "GOOGL")
 
 
+def test_lowercase_word_is_not_a_ticker():
+    assert extract_tickers("all can for are the next big thing", SET) == ()
+
+
 def test_word_boundary():
     # substring of a longer word should not match
     assert extract_tickers("the gamestop store", SET) == ()
